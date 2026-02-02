@@ -1,0 +1,17 @@
+# Phase 2 Dependencies — BraTS Dataset Loading & Axial Slicing
+
+# Core scientific computing
+numpy>=1.21.0
+
+# NIfTI file handling
+nibabel>=3.2.0
+
+# Phase 3 Dependencies — Frozen Model Inference & Baseline Strategies
+
+# Deep learning framework (inference only, no training)
+torch>=2.0.0
+
+# Future phases will require (DO NOT install yet):
+# - scikit-learn>=1.0.0 (for metrics)
+# - matplotlib>=3.5.0 (for visualization)
+# - scipy>=1.7.0 (for optimization)
