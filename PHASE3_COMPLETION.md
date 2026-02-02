@@ -4,7 +4,11 @@
 
 **Phase:** 3 (Frozen Model Inference & Baseline Strategies)  
 **Status:** ✅ Complete  
-**Date:** 2026-02-02
+**Date:** 2026-02-02  
+**Backbone:** Pretrained nnU-Net v2 (upgraded from Simple U-Net)
+
+> **Note:** Phase 3 backbone upgraded from Simple U-Net to pretrained nnU-Net.  
+> Phase 3 remains complete and valid. All interfaces and guarantees preserved.
 
 ---
 
@@ -42,17 +46,23 @@ These features are intentionally excluded and will be addressed in future phases
 
 **Implementation:**
 
-- Uses Simple U-Net for prototyping
-- Designed for easy replacement with nnU-Net
+- Uses pretrained nnU-Net v2 as production backbone
+- Simple U-Net retained for early pipeline validation only
 - Includes validation and error checking
 - Documented with clear constraints
+- All experimental results use nnU-Net
 
 **Usage:**
 
 ```python
 from models.backbone.frozen_model import load_frozen_model
 
-model = load_frozen_model(device='cuda')
+# Production: Load pretrained nnU-Net
+model = load_frozen_model(
+    model_path='/path/to/nnunet/checkpoint',
+    device='cuda',
+    use_nnunet=True
+)
 prob_map, pred_mask = model.predict_slice(image_slice)
 ```
 
