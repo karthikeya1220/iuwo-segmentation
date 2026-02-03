@@ -1,0 +1,76 @@
+================================================================================
+BraTS 2024 SUBSET EXTRACTION - SUMMARY
+================================================================================
+
+OBJECTIVE
+---------
+Extract 23 patients from BraTS 2024 archive.zip (~50GB) without unpacking
+the full dataset, saving disk space and time.
+
+SOLUTION
+--------
+Two extraction scripts with identical functionality:
+
+1. Python: scripts/extract_brats_subset.py (recommended)
+2. Bash:   scripts/extract_brats_subset.sh (alternative)
+
+PATIENT SUBSET
+--------------
+Training:   20 patients (stratified by tumor volume)
+Evaluation:  3 patients (held-out validation)
+Total:      23 patients
+
+Expected Output Size: ~2-3 GB (vs 50GB full archive)
+
+USAGE
+-----
+# Dry run (preview)
+python scripts/extract_brats_subset.py --dry-run
+
+# Actual extraction
+python scripts/extract_brats_subset.py
+
+OUTPUT STRUCTURE
+----------------
+data/brats_subset/
+├── BraTS-GLI-00005-100/
+│   ├── *-t1n.nii
+│   ├── *-t1c.nii
+│   ├── *-t2f.nii
+│   ├── *-t2w.nii
+│   └── *-seg.nii
+└── ... (22 more patients)
+
+FEATURES
+--------
+✅ Selective extraction (no full unpack)
+✅ No-overlap verification
+✅ Missing patient detection
+✅ Dry-run mode
+✅ Progress tracking
+✅ Size statistics
+✅ Cross-platform
+
+DOCUMENTATION
+-------------
+- DATA_EXTRACTION_GUIDE.md  : Complete usage guide
+- PATIENT_SELECTION_STRATEGY.md : Selection methodology
+- PATIENT_LISTS.md : Quick reference lists
+
+NEXT STEPS
+----------
+After extraction:
+1. Verify: ls data/brats_subset | wc -l  (expect 23)
+2. Run pipeline: ./scripts/train_and_evaluate.sh
+
+FOR GOOGLE COLAB
+----------------
+1. Zip subset: zip -r brats_subset.zip data/brats_subset
+2. Upload to Google Drive
+3. Mount Drive in Colab
+4. Extract: !unzip /content/drive/MyDrive/brats_subset.zip
+
+================================================================================
+Generated: 2026-02-03 23:47 IST
+Status: READY FOR USE
+================================================================================
