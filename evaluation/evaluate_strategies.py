@@ -146,8 +146,16 @@ def evaluate_strategies(
             unc_data = np.load(unc_path / f"{patient_id}.npy", allow_pickle=True).item()
             imp_data = np.load(imp_path / f"{patient_id}.npy", allow_pickle=True).item()
             
+            # Prepare baseline slices with 'mask' key for Dice computation
+            baseline_slices = []
+            for s in pred_data["slices"]:
+                baseline_slices.append({
+                    "slice_id": s["slice_id"],
+                    "mask": s["pred_mask"]
+                })
+
             # Baseline (No Correction)
-            baseline_result = compute_volume_dice(pred_data["slices"], gt_data["slices"])
+            baseline_result = compute_volume_dice(baseline_slices, gt_data["slices"])
             # Store baseline for all budgets (it's constant)
             for b_pct in budgets:
                 results["per_patient"][patient_id]["No Correction"][b_pct] = baseline_result

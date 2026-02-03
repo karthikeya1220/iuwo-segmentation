@@ -11,6 +11,7 @@ Date: 2026-02-02
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 
 
 class SimpleUNet(nn.Module):
@@ -103,18 +104,26 @@ class SimpleUNet(nn.Module):
         
         # Decoder with skip connections
         dec4 = self.upconv4(bottleneck)
+        if dec4.shape[2:] != enc4.shape[2:]:
+            dec4 = F.interpolate(dec4, size=enc4.shape[2:], mode='bilinear', align_corners=False)
         dec4 = torch.cat([dec4, enc4], dim=1)
         dec4 = self.dec4(dec4)
         
         dec3 = self.upconv3(dec4)
+        if dec3.shape[2:] != enc3.shape[2:]:
+            dec3 = F.interpolate(dec3, size=enc3.shape[2:], mode='bilinear', align_corners=False)
         dec3 = torch.cat([dec3, enc3], dim=1)
         dec3 = self.dec3(dec3)
         
         dec2 = self.upconv2(dec3)
+        if dec2.shape[2:] != enc2.shape[2:]:
+            dec2 = F.interpolate(dec2, size=enc2.shape[2:], mode='bilinear', align_corners=False)
         dec2 = torch.cat([dec2, enc2], dim=1)
         dec2 = self.dec2(dec2)
         
         dec1 = self.upconv1(dec2)
+        if dec1.shape[2:] != enc1.shape[2:]:
+            dec1 = F.interpolate(dec1, size=enc1.shape[2:], mode='bilinear', align_corners=False)
         dec1 = torch.cat([dec1, enc1], dim=1)
         dec1 = self.dec1(dec1)
         
@@ -131,8 +140,8 @@ if __name__ == "__main__":
     model = SimpleUNet(in_channels=1, out_channels=1)
     model.eval()
     
-    # Create dummy input
-    dummy_input = torch.randn(1, 1, 256, 256)
+    # Create dummy input with odd dimensions to test padding
+    dummy_input = torch.randn(1, 1, 218, 182)
     
     # Forward pass
     with torch.no_grad():
@@ -141,4 +150,6 @@ if __name__ == "__main__":
     print(f"✅ Forward pass successful!")
     print(f"   Input shape: {dummy_input.shape}")
     print(f"   Output shape: {output.shape}")
+    
+    assert output.shape == dummy_input.shape, "Output shape must match input shape"
     print(f"   Parameters: {sum(p.numel() for p in model.parameters()):,}")

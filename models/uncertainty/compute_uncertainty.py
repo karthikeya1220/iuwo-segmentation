@@ -93,13 +93,26 @@ class MonteCarloDropoutUncertainty:
             This enables dropout at TEST TIME for Monte Carlo sampling.
             Model remains frozen (no gradient computation).
         """
-        for module in self.model.modules():
+        # Handle FrozenSegmentationModel wrapper
+        target_model = self.model.model if hasattr(self.model, 'model') else self.model
+        
+        if not hasattr(target_model, 'modules'):
+            warnings.warn("Model does not strictly look like a PyTorch module. Dropout enabling might fail.")
+            return
+
+        for module in target_model.modules():
             if isinstance(module, nn.Dropout) or isinstance(module, nn.Dropout2d):
                 module.train()  # Enable dropout
     
     def _disable_dropout(self):
         """Disable dropout layers (return to deterministic inference)."""
-        for module in self.model.modules():
+        # Handle FrozenSegmentationModel wrapper
+        target_model = self.model.model if hasattr(self.model, 'model') else self.model
+        
+        if not hasattr(target_model, 'modules'):
+            return
+
+        for module in target_model.modules():
             if isinstance(module, nn.Dropout) or isinstance(module, nn.Dropout2d):
                 module.eval()  # Disable dropout
     
@@ -142,8 +155,21 @@ class MonteCarloDropoutUncertainty:
         
         # Prepare input tensor
         input_tensor = torch.from_numpy(image_slice).unsqueeze(0).unsqueeze(0)
-        if hasattr(self.model, 'device'):
-            input_tensor = input_tensor.to(self.model.device)
+        
+        # Handle device placement for wrapper or module
+        device = getattr(self.model, 'device', None)
+        if device is None and hasattr(self.model, 'model'):
+             device = getattr(self.model.model, 'device', None)
+        
+        # Fallback to checking parameters if device is still unknown but it is a module
+        if device is None and isinstance(self.model, nn.Module):
+             try:
+                 device = next(self.model.parameters()).device
+             except StopIteration:
+                 pass
+        
+        if device:
+            input_tensor = input_tensor.to(device)
         
         # Enable dropout for stochastic inference
         self._enable_dropout()
