@@ -4,6 +4,10 @@ __pycache__/
 *$py.class
 *.so
 .Python
+env/
+venv/
+.venv/
+ENV/
 build/
 develop-eggs/
 dist/
@@ -20,51 +24,53 @@ wheels/
 .installed.cfg
 *.egg
 
-# Virtual environments
-venv/
-env/
-ENV/
-.venv
-
-# IDEs
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
 # Jupyter Notebook
 .ipynb_checkpoints
 
-# Data files (large binary files)
-*.nii
-*.nii.gz
-*.npy
-*.npz
-processed/
-raw_data/
-BraTS*/
+# PyCharm
+.idea/
 
-# Model checkpoints (future phases)
-checkpoints/
-*.pth
-*.pt
-*.ckpt
+# VS Code
+.vscode/
 
-# Logs and outputs
-logs/
-outputs/
-results/
-*.log
-
-# OS
+# macOS
 .DS_Store
-Thumbs.db
+.AppleDouble
+.LSOverride
+
+# nnU-Net Environment
+nnunet_env/
+nnunet_input/
+nnunet_output/
+
+# Data
+data/raw/
+data/brats_subset/
+*.zip
+archive.zip
 
 # Temporary files
-tmp/
-temp/
+*.log
 *.tmp
+*.bak
+*.swp
+*.swo
+*~
+.*.swp
 
-# Keep directory structure
-!.gitkeep
+# Model artifacts (large files)
+models/predictions/
+models/uncertainty/artifacts/
+models/impact/artifacts/
+predictions/
+
+# Results (can be regenerated)
+evaluation/*.npy
+evaluation/*.png
+
+# Checkpoints
+*.pth
+*.pkl
+
+# Extracted data
+temp_extract/
