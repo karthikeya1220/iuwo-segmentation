@@ -43,9 +43,17 @@ nnunet_env/
 nnunet_input/
 nnunet_output/
 
-# Data
+# Data - Exclude all data directories and large binary files
 data/raw/
+data/raw_subset/
 data/brats_subset/
+data/processed/
+*.nii
+*.nii.gz
+*.npy
+*.npz
+*.h5
+*.hdf5
 *.zip
 archive.zip
 

@@ -1,0 +1,21 @@
+{
+  "dataset_version": "n02_patients",
+  "num_patients": 2,
+  "patient_ids": [
+    "BraTS-GLI-00008-103",
+    "BraTS-GLI-00009-100"
+  ],
+  "data_source": "data/processed",
+  "extraction_date": "unknown",
+  "evaluation_date": "2026-02-04T18:47:11.541772",
+  "model_checkpoint": "models/nnunet_brats_fold0.pth",
+  "budgets_evaluated": [
+    0.05,
+    0.1,
+    0.2,
+    0.3,
+    0.5
+  ],
+  "random_seed": null,
+  "notes": "Migrated from legacy results.npy format"
+}
